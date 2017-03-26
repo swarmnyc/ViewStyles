@@ -7,8 +7,7 @@ An exploration in better management of view styles when creating views programma
 
 
 
-Generally when writing view code our files will fill up with blocks like this:
-
+Generally when writing view code our files will fill up with blocks like this: 
 ```swift
 lazy var nextButton: UILabel = {
         var label = UILabel()
