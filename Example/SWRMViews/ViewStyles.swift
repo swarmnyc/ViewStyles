@@ -10,7 +10,7 @@ import Foundation
 import ViewStyles
 
 
-struct TicketTitle: TextStyle {
+struct Title: TextStyle {
     var font = UIFont(name: "DINCondensed-Bold", size: 72)!
     var color = UIColor.white
     var paragraphSpacing: CGFloat = 32.4
@@ -21,18 +21,7 @@ struct TicketTitle: TextStyle {
     var designScreenSize: CGSize = CGSize(width: 640, height: 1136)
 }
 
-struct TicketSeatTitle: TextStyle {
-    var font = UIFont(name: "DINCondensed-Bold", size: 72)!
-    var color = UIColor.white
-    var paragraphSpacing: CGFloat = 32.4
-    var kerning: Double = 11.25
-    var lineHeight: CGFloat = 84
-    var alignment: NSTextAlignment = .left
-    var isUppercased: Bool = true
-    var designScreenSize: CGSize = CGSize(width: 640, height: 1136)
-}
-
-struct VenueTitle: TextStyle {
+struct SubTitle: TextStyle {
     var font = UIFont.systemFont(ofSize: 36, weight: UIFontWeightRegular)
     var color = UIColor.white
     var paragraphSpacing: CGFloat = 32.4
@@ -43,7 +32,7 @@ struct VenueTitle: TextStyle {
     var designScreenSize: CGSize = CGSize(width: 640, height: 1136)
 }
 
-class TicketSeatLabels: TextStyle {
+class ExampleOverrideTextStype: TextStyle {
     var font = UIFont.systemFont(ofSize: 24, weight: UIFontWeightRegular)
     var color: UIColor {
         return UIColor.white
@@ -64,14 +53,14 @@ class TicketSeatLabels: TextStyle {
 // if you use classes instead of structs you can override specific properties of the style, but share the rest of them
 // if you continue to use structs you can use the overrideStyles closure in the factory methods of TextStyle to override specific properties at the time of creation
 
-class BlackTicketSeatLabels: TicketSeatLabels {
+class BlankExampleOverrideTextStype: ExampleOverrideTextStype {
     override var color: UIColor {
         return UIColor.black
     }
 }
 
 
-class AvatarNameLabel: TicketSeatLabels {
+class AvatarNameLabel: ExampleOverrideTextStype {
     override var isUppercased: Bool {
         return false
     }
