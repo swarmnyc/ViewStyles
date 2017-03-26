@@ -1,11 +1,11 @@
 use_frameworks!
 
-target 'SWRMViews_Example' do
-  pod 'SWRMViews', :path => '../'
-
-  target 'SWRMViews_Tests' do
+target 'ViewStyles_Example' do
+  pod 'ViewStyles', :path => '../'
+  pod 'SnapKit'
+  target 'ViewStyles_Tests' do
     inherit! :search_paths
-
+    pod 'FBSnapshotTestCase'
     
   end
 end

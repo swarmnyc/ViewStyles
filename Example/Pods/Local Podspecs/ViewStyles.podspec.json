@@ -1,0 +1,22 @@
+{
+  "name": "ViewStyles",
+  "version": "0.1.0",
+  "summary": "A set of protocols to help with organizing, sharing, and defining view styles programatically",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/swarmnyc/ViewStyles",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "ahartwel": "hartwellalex@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/ahartwel/SWRMViews.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "ViewStyles/Classes/**/*"
+}

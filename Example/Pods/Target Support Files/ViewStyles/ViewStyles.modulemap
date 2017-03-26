@@ -1,0 +1,6 @@
+framework module ViewStyles {
+  umbrella header "ViewStyles-umbrella.h"
+
+  export *
+  module * { export * }
+}
