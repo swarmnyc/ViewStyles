@@ -1,4 +1,6 @@
 # ViewStyles
+![build status](https://www.bitrise.io/app/0504e0926436be28.svg?token=yeBWSS4w3xaq7MVpJBFOeA)
+
 
 An exploration in better management of view styles when creating views programmatically in iOS, with the goal of simplicity and reusability. And a larger goal of being able to export styles directly from Sketch. Because of this larger goal the view properties that are focused on are those that have a matching option in Sketch.
 
