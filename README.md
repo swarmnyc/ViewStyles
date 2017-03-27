@@ -1,5 +1,5 @@
 # ViewStyles
-![build status](https://www.bitrise.io/app/0504e0926436be28.svg?token=yeBWSS4w3xaq7MVpJBFOeA) [![codecov](https://codecov.io/gh/swarmnyc/ViewStyles/branch/master/graph/badge.svg)](https://codecov.io/gh/swarmnyc/ViewStyles)
+![build status](https://www.bitrise.io/app/0504e0926436be28.svg?token=yeBWSS4w3xaq7MVpJBFOeA) [![codecov](https://codecov.io/gh/swarmnyc/ViewStyles/branch/master/graph/badge.svg)](https://codecov.io/gh/swarmnyc/ViewStyles)  
 
 
 
