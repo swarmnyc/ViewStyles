@@ -80,7 +80,7 @@ public extension TextStyle {
     }
     
     var lineHeight: CGFloat {
-        return self.font.pointSize
+        return self.font.lineHeight
     }
     
     var underlineStyle: NSUnderlineStyle {
