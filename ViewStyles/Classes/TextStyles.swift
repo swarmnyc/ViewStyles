@@ -38,18 +38,27 @@ public extension TextStyle {
     
     public static func getLabelWithStyle(withText text: String, scaleForScreenSize: Bool, overrideStyles: ((inout Self) -> Void)? = nil, subclass: UILabel.Type = UILabel.self) -> UILabel {
         var style = Self()
+        if scaleForScreenSize {
+            style.font = style.scaleFontToCurrentScreenSize()
+        }
         overrideStyles?(&style)
         return style.getLabelWithStyleAndParagraphAttributes(withText: text, scaleForScreenSize: scaleForScreenSize, subclass: subclass)
     }
 
     public static func getTextViewWithStyle(withText text: String, scaleForScreenSize: Bool, overrideStyles: ((inout Self) -> Void)? = nil, subclass: UITextView.Type = UITextView.self) -> UITextView {
         var style = Self()
+        if scaleForScreenSize {
+            style.font = style.scaleFontToCurrentScreenSize()
+        }
         overrideStyles?(&style)
         return style.getTextViewWithStyleAndParagraphAttributes(withText: text, scaleForScreenSize: scaleForScreenSize, subclass: subclass)
     }
 
     public static func getTextFieldWithStyle(withText text: String, scaleForScreenSize: Bool, overrideStyles: ((inout Self) -> Void)? = nil, subclass: UITextField.Type = UITextField.self) -> UITextField {
         var style = Self()
+        if scaleForScreenSize {
+            style.font = style.scaleFontToCurrentScreenSize()
+        }
         overrideStyles?(&style)
         return style.getTextFieldWithStyleAndParagraphAttributes(withText: text, scaleForScreenSize: scaleForScreenSize, subclass: subclass)
     }
@@ -193,10 +202,7 @@ public extension TextStyle {
     }
     
     func getAttributedString(withText text: String, scaleForScreenSize: Bool) -> NSMutableAttributedString {
-        var styles = self
-        if scaleForScreenSize {
-            styles.font = self.scaleFontToCurrentScreenSize()
-        }
+        let styles = self
         return self.getAttributedString(withText: text, withStyle: styles, scaleForScreenSize: scaleForScreenSize)
     }
     
