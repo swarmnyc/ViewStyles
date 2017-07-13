@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ViewStyles'
-  s.version          = '0.1.1'
+  s.version          = '0.1.2'
   s.summary          = 'A set of protocols to help with organizing, sharing, and defining view styles programatically'
 
 # This description is used to generate tags and improve search results.

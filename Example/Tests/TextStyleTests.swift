@@ -42,6 +42,15 @@ class TextStyleTests: FBSnapshotTestCase {
         FBSnapshotVerifyLayer(view.layer)
     }
     
+    func testTextStyleLabelChangeStyle() {
+        let view = TicketTitle.getLabelWithStyle(withText: "Testing", scaleForScreenSize: false)
+        TicketTitle.applyStyle(toLabel: view, withText: "testing", scaleForScreenSize: false)
+        view.frame = CGRect(x: 0, y: 0, width: 300, height: 100)
+        FBSnapshotVerifyView(view)
+        FBSnapshotVerifyLayer(view.layer)
+    }
+    
+    
     func testTextStyleLabelOverrideIsUppercased() {
         let view = TicketTitle.getLabelWithStyle(withText: "Testing", scaleForScreenSize: false, overrideStyles: {
             styles in

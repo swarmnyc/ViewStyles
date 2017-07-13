@@ -255,6 +255,8 @@ public extension TextStyle {
         paragraphStyles.maximumLineHeight = lineHeight
         paragraphStyles.paragraphSpacing = paragraphSpacing
         return [
+            NSFontAttributeName: style.font,
+            NSForegroundColorAttributeName: style.color,
             NSKernAttributeName: kerning,
             NSParagraphStyleAttributeName: paragraphStyles,
             NSUnderlineStyleAttributeName: style.underlineStyle.rawValue,
