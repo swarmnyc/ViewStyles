@@ -33,9 +33,19 @@ public protocol TextStyle: ViewStyle {
     init()
 }
 
+public protocol UITextStyleAttributes {
+    var font: UIFont {get set}
+    var textColor: UIColor  {get set}
+    var textAlignment: NSTextAlignment {get set}
+    var text: String? {get set}
+    var attributedText: NSAttributedString? {get set}
+}
+
+extension UILabel : UITextStyleAttributes {}
+extension UITextView : UITextStyleAttributes {}
+extension UITextField : UITextStyleAttributes {}
+
 public extension TextStyle {
-    
-    
     public static func getLabelWithStyle(withText text: String, scaleForScreenSize: Bool, overrideStyles: ((inout Self) -> Void)? = nil, subclass: UILabel.Type = UILabel.self) -> UILabel {
         var style = Self()
         if scaleForScreenSize {
@@ -62,7 +72,24 @@ public extension TextStyle {
         overrideStyles?(&style)
         return style.getTextFieldWithStyleAndParagraphAttributes(withText: text, scaleForScreenSize: scaleForScreenSize, subclass: subclass)
     }
-    
+
+    public static func getLabelWithStyle(
+        withText text: String,
+        scaleForScreenSize: Bool,
+        overrideStyles: ((inout Self) -> Void)? = nil,
+        subclass: UILabel.Type = UILabel.self) -> UITextStyleAttributes {
+        var style = Self()
+
+        if scaleForScreenSize {
+            style.font = style.scaleFontToCurrentScreenSize()
+        }
+        overrideStyles?(&style)
+        return style.getLabelWithStyleAndParagraphAttributes(
+            withText: text,
+            scaleForScreenSize: scaleForScreenSize,
+            subclass: subclass)
+    }
+
     var kerning: Double {
         return 0
     }
@@ -122,6 +149,15 @@ public extension TextStyle {
         label.attributedText = attributedString
         return label
     }
+
+    func applyStyle(toView: inout UITextStyleAttributes) -> UITextStyleAttributes {
+
+        toView.font = self.font
+        toView.textColor = self.color
+        toView.textAlignment = self.alignment
+
+        toView.text = self.getTransformedText(toView.text)
+    }
     
     func getLabelWithStyle(withText text: String, subclass: UILabel.Type) -> UILabel {
         var style = self
@@ -130,7 +166,6 @@ public extension TextStyle {
         label.textColor = style.color
         label.textAlignment = style.alignment
         label.text = style.getTransformedText(text)
-        label.backgroundColor = style.backgroundColor
         self.addStylesToView(label)
         self.labelSetUpBlock?(&label)
         return label
@@ -231,5 +266,13 @@ public extension TextStyle {
             NSUnderlineStyleAttributeName: style.underlineStyle.rawValue,
             NSUnderlineColorAttributeName: style.color
         ]
+    }
+
+    func addStylesToLabel(_ label: UILabel, scaleForScreenSize: <#T##Bool##Swift.Bool#>) -> UILabel {
+
+        self.addStylesToView(label)
+
+        label.attributedText = getAttributedString(withText: label.text, scaleForScreenSize: scaleForScreenSize)
+
     }
 }
