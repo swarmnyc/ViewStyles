@@ -33,36 +33,62 @@ public protocol TextStyle: ViewStyle {
     init()
 }
 
+public protocol UITextStyleAttributes {
+    var viewStyleFont: UIFont {get set}
+    var viewStyleTextColor: UIColor! {get set}
+    var textAlignment: NSTextAlignment {get set}
+    var viewStyleText: String? {get set}
+    var viewStyleAttributedText: NSAttributedString? {get set}
+}
+
+
 public extension TextStyle {
-    
-    
     public static func getLabelWithStyle(withText text: String, scaleForScreenSize: Bool, overrideStyles: ((inout Self) -> Void)? = nil, subclass: UILabel.Type = UILabel.self) -> UILabel {
-        var style = Self()
-        if scaleForScreenSize {
-            style.font = style.scaleFontToCurrentScreenSize()
-        }
-        overrideStyles?(&style)
+        let style = Self.createStyle(scaleForScreenSize: scaleForScreenSize, overrideStyles: overrideStyles)
         return style.getLabelWithStyleAndParagraphAttributes(withText: text, scaleForScreenSize: scaleForScreenSize, subclass: subclass)
+    }
+    
+    public static func applyStyle(toLabel label: UILabel, withText text: String, scaleForScreenSize: Bool) {
+        let style = Self.createStyle(scaleForScreenSize: scaleForScreenSize, overrideStyles: nil)
+        _ = style.applyTextStyle(toView: label, withText: text)
+        _ = style.applyAttributedText(toView: label, withText: text, scaleForScreenSize: scaleForScreenSize)
     }
 
     public static func getTextViewWithStyle(withText text: String, scaleForScreenSize: Bool, overrideStyles: ((inout Self) -> Void)? = nil, subclass: UITextView.Type = UITextView.self) -> UITextView {
-        var style = Self()
-        if scaleForScreenSize {
-            style.font = style.scaleFontToCurrentScreenSize()
-        }
-        overrideStyles?(&style)
+        let style = Self.createStyle(scaleForScreenSize: scaleForScreenSize, overrideStyles: overrideStyles)
         return style.getTextViewWithStyleAndParagraphAttributes(withText: text, scaleForScreenSize: scaleForScreenSize, subclass: subclass)
+    }
+    
+    public static func applyStyle(toTextView textView: UITextView, withText text: String, scaleForScreenSize: Bool) {
+        let style = Self.createStyle(scaleForScreenSize: scaleForScreenSize, overrideStyles: nil)
+        _ = style.applyTextStyle(toView: textView, withText: text)
+        _ = style.applyAttributedText(toView: textView, withText: text, scaleForScreenSize: scaleForScreenSize)
     }
 
     public static func getTextFieldWithStyle(withText text: String, scaleForScreenSize: Bool, overrideStyles: ((inout Self) -> Void)? = nil, subclass: UITextField.Type = UITextField.self) -> UITextField {
+        let style = Self.createStyle(scaleForScreenSize: scaleForScreenSize, overrideStyles: overrideStyles)
+        return style.getTextFieldWithStyleAndParagraphAttributes(withText: text, scaleForScreenSize: scaleForScreenSize, subclass: subclass)
+    }
+    
+    public static func applyStyle(toTextField textField: UITextField, withText text: String, scaleForScreenSize: Bool) {
+        let style = Self.createStyle(scaleForScreenSize: scaleForScreenSize, overrideStyles: nil)
+        _ = style.applyTextStyle(toView: textField, withText: text)
+        _ = style.applyAttributedText(toView: textField, withText: text, scaleForScreenSize: scaleForScreenSize)
+    }
+    
+    
+    
+    
+    public static func createStyle(scaleForScreenSize: Bool, overrideStyles: ((inout Self) -> Void)?) -> Self {
         var style = Self()
         if scaleForScreenSize {
             style.font = style.scaleFontToCurrentScreenSize()
         }
         overrideStyles?(&style)
-        return style.getTextFieldWithStyleAndParagraphAttributes(withText: text, scaleForScreenSize: scaleForScreenSize, subclass: subclass)
+        return style
     }
-    
+
+
     var kerning: Double {
         return 0
     }
@@ -117,66 +143,68 @@ public extension TextStyle {
     
     
     func getLabelWithStyleAndParagraphAttributes(withText text: String, scaleForScreenSize: Bool, subclass: UILabel.Type = UILabel.self) -> UILabel {
-        let label = self.getLabelWithStyle(withText: text, subclass: subclass)
-        let attributedString = self.getAttributedString(withText: text, scaleForScreenSize: scaleForScreenSize)
-        label.attributedText = attributedString
+        var label = self.getLabelWithStyle(withText: text, subclass: subclass)
+        label = self.applyAttributedText(toView: label, withText: text, scaleForScreenSize: scaleForScreenSize)
         return label
+    }
+
+    func applyTextStyle<T: UITextStyleAttributes>(toView view: T, withText text: String) -> T {
+        var view = view
+        view.viewStyleFont = self.font
+        view.viewStyleTextColor = self.color
+        view.textAlignment = self.alignment
+        view.viewStyleText = self.getTransformedText(text)
+        if let view = view as? UITextView {
+            view.textContainer.lineBreakMode = .byWordWrapping
+            view.textContainer.lineFragmentPadding = 0
+        }
+        if let view = view as? UIView {
+            _ = self.addStylesToView(view)
+        }
+        return view
+    }
+    
+    func applyAttributedText<T: UITextStyleAttributes>(toView view: T, withText text: String, scaleForScreenSize: Bool) -> T {
+        var view = view
+        let attributedString = self.getAttributedString(withText: text, scaleForScreenSize: scaleForScreenSize)
+        view.viewStyleAttributedText = attributedString
+        return view
     }
     
     func getLabelWithStyle(withText text: String, subclass: UILabel.Type) -> UILabel {
-        var style = self
         var label = subclass.init()
-        label.font = style.font
-        label.textColor = style.color
-        label.textAlignment = style.alignment
-        label.text = style.getTransformedText(text)
-        label.backgroundColor = style.backgroundColor
-        self.addStylesToView(label)
+        label = self.applyTextStyle(toView: label, withText: text)
         self.labelSetUpBlock?(&label)
         return label
     }
     
     
+    
     func getTextViewWithStyle(withText text: String, subclass: UITextView.Type) -> UITextView {
         var view = subclass.init()
-        view.font = self.font
-        view.textColor = self.color
-        view.textAlignment = self.alignment
-        view.text = self.getTransformedText(text)
-        view.backgroundColor = self.backgroundColor
-        view.textContainer.lineBreakMode = .byWordWrapping
-        view.textContainer.lineFragmentPadding = 0
-        self.addStylesToView(view)
+        view = self.applyTextStyle(toView: view, withText: text)
         self.textViewSetUpBlock?(&view)
         return view
     }
     
     func getTextViewWithStyleAndParagraphAttributes(withText text: String, scaleForScreenSize: Bool, subclass: UITextView.Type = UITextView.self) -> UITextView {
-        let view = self.getTextViewWithStyle(withText: text, subclass: subclass)
-        let attributedString = self.getAttributedString(withText: text, scaleForScreenSize: scaleForScreenSize)
-        view.attributedText = attributedString
+        var view = self.getTextViewWithStyle(withText: text, subclass: subclass)
+        view = self.applyAttributedText(toView: view, withText: text, scaleForScreenSize: scaleForScreenSize)
         return view
     }
     
     func getTextFieldWithStyle(withText text: String, subclass: UITextField.Type = UITextField.self) -> UITextField {
         var field = subclass.init()
-        field.font = self.font
-        field.textColor = self.color
-        field.textAlignment = self.alignment
-        field.text = self.getTransformedText(text)
-        field.backgroundColor = self.backgroundColor
-        self.addStylesToView(field)
+        field = self.applyTextStyle(toView: field, withText: text)
         self.textFieldSetUpBlock?(&field)
         return field
     }
     
     func getTextFieldWithStyleAndParagraphAttributes(withText text: String, scaleForScreenSize: Bool, subclass: UITextField.Type = UITextField.self) -> UITextField {
-        let field = self.getTextFieldWithStyle(withText: text, subclass: subclass)
-        let attributedString = self.getAttributedString(withText: text, scaleForScreenSize: scaleForScreenSize)
-        field.attributedText = attributedString
+        var field = self.getTextFieldWithStyle(withText: text, subclass: subclass)
+        field = self.applyAttributedText(toView: field, withText: text, scaleForScreenSize: scaleForScreenSize)
         return field
     }
-    
     
     func scaleFontToCurrentScreenSize() -> UIFont {
         let ratio = self.getRatioToScreenSize()
@@ -216,20 +244,22 @@ public extension TextStyle {
         paragraphStyles.alignment = style.alignment
         var lineHeight = style.lineHeight
         var paragraphSpacing = style.paragraphSpacing
+        var kerning = style.kerning
         if scaleForScreenSize {
-            lineHeight = lineHeight * self.getRatioToScreenSize()
-            paragraphSpacing = lineHeight * self.getRatioToScreenSize()
+            let ratio = self.getRatioToScreenSize()
+            lineHeight = lineHeight * ratio
+            paragraphSpacing = paragraphSpacing * ratio
+            kerning = kerning * Double(ratio)
         }
         paragraphStyles.minimumLineHeight = lineHeight
         paragraphStyles.maximumLineHeight = lineHeight
         paragraphStyles.paragraphSpacing = paragraphSpacing
         return [
-            NSFontAttributeName: style.font,
-            NSForegroundColorAttributeName: style.color,
-            NSKernAttributeName: style.kerning,
+            NSKernAttributeName: kerning,
             NSParagraphStyleAttributeName: paragraphStyles,
             NSUnderlineStyleAttributeName: style.underlineStyle.rawValue,
             NSUnderlineColorAttributeName: style.color
         ]
     }
+
 }

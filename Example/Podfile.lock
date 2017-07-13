@@ -14,13 +14,13 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   ViewStyles:
-    :path: "../"
+    :path: ../
 
 SPEC CHECKSUMS:
-  FBSnapshotTestCase: '094f9f314decbabe373b87cc339bea235a63e07a'
+  FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   SnapKit: 1ca44df72cfa543218d177cb8aab029d10d86ea7
   ViewStyles: 9fe05c85732c325ca2a666b1f6513c20e1f18700
 
 PODFILE CHECKSUM: bafa1b178099d335bb7537667983ffaff5dd5c21
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.1
